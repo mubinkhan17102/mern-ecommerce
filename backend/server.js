@@ -4,6 +4,13 @@ const dotenv = require('dotenv')
 const connectDb = require('./config/database')
 const errorHandleMiddleware = require('./middleware/error');
 
+//Uncauth error by indefined method
+process.on('uncaughtException', (err)=>{
+    console.log(`Eror: ${err.message}`);
+    console.log(`Shutting down the server due to uncaught exception`);
+    process.exit(1);
+})
+
 dotenv.config()
 const app = express()
 
@@ -14,6 +21,16 @@ app.use('/api/v1', productRouter);
 app.use(errorHandleMiddleware)
 
 const PORT = process.env.PORT || 5000
-app.listen(PORT, ()=>{
+const server = app.listen(PORT, ()=>{
     console.log(`server start on http://localhost:${PORT}`)
+})
+
+//Undalse rejection like databse stop any service shut down
+process.on('unhandledRejection', err=>{
+    console.log(`Error ${err.message}`)
+    console.log(`Shutting down the server due to unhandled promise rejection`)
+
+    server.close(()=>{
+        process.exit()
+    })
 })

@@ -1,13 +1,10 @@
 const mongoose = require('mongoose')
 
 const connectDb = async ()=>{
-    await mongoose.connect(process.env.DB_URI)
-    mongoose.connection.on('connected', ()=>{
-        console.log(`Mongo connected`)
-    })
-    mongoose.connection.on('disconnect', ()=>{
-        console.log(`Mongo disconnected`)
-    })
+    mongoose.connect(process.env.DB_URI)
+        .then((data)=>{
+            console.log(`Mongodb connected with server :  ${data.connection.host}`);
+        })
 }
 
 module.exports = connectDb;
