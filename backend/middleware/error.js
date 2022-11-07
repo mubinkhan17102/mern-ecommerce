@@ -1,12 +1,12 @@
 const ErrorHandler = require('../utils/errorHandler');
 
 
-module.exports = (err, res, req, next)=>{
-    err.staus = err.staus || 500;
+module.exports = (err, req, res, next)=>{
+    err.status = err.status || 500;
     err.message = err.message || 'Internal server error'
 
-    res.staus(err.staus).json({
+    res.status(err.status).json({
         success: false,
-        error: err
+        error: err.message
     })
 }
