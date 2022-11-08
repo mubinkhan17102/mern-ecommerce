@@ -1,5 +1,6 @@
 const express = require('express')
 const productRouter = require('./routes/productRoute')
+const userRouter = require('./routes/userRoute')
 const dotenv = require('dotenv')
 const connectDb = require('./config/database')
 const errorHandleMiddleware = require('./middleware/error');
@@ -18,6 +19,7 @@ const app = express()
 connectDb()
 app.use(express.json());
 app.use('/api/v1', productRouter);
+app.use('/api/v1', userRouter)
 app.use(errorHandleMiddleware)
 
 const PORT = process.env.PORT || 5000
