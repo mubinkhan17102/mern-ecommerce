@@ -4,6 +4,8 @@ const userRouter = require('./routes/userRoute')
 const dotenv = require('dotenv')
 const connectDb = require('./config/database')
 const errorHandleMiddleware = require('./middleware/error');
+const isAuthinticated = require('./middleware/auth')
+const cookieParser = require('cookie-parser')
 
 //Uncauth error by indefined method
 process.on('uncaughtException', (err)=>{
@@ -18,6 +20,7 @@ const app = express()
 
 connectDb()
 app.use(express.json());
+app.use(cookieParser())
 app.use('/api/v1', productRouter);
 app.use('/api/v1', userRouter)
 app.use(errorHandleMiddleware)
