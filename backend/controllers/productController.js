@@ -5,6 +5,9 @@ const ApiFeatures = require('../utils/apiFeature');
 
 //Create product
 exports.createProduct = handleAsyncError(async (req, res, next)=>{
+
+    req.body.user = req.user._id;
+
     const product = await Product.create(req.body);
     res.status(201).json({
         success: true,
