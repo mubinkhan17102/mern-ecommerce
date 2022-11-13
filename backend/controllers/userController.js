@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const ErrorHandler = require('../utils/errorHandler')
 const handleAsyncError = require('../middleware/handleAsyncError');
 const sentToken = require('../utils/sentToken')
-const sentEmail = require('../utils/sendEmail');
+const sendEmail = require('../utils/sendEmail');
 
 //Register user
 exports.registerUser = handleAsyncError(async (req, res, next)=>{
@@ -74,13 +74,13 @@ exports.forgotPassword = handleAsyncError(async (req, res, next)=>{
 
     const resetToken = user.getResetPasswordToken();
 
-    await user.save({validateBeforeSave: false})
+    await user.save()
 
-    const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${token}`;
-    const message = `Your password reset token is : - \n\n ${resetToken} \n\n If you have not requested this email please ignore`;
+    const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
+    const message = `Your password reset token is : - \n\n ${resetPasswordUrl} \n\n If you have not requested this email please ignore`;
 
     try{
-        await semEmail({
+        await sendEmail({
             email: user.email,
             subject: 'Pass recovery',
             message: message
