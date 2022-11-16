@@ -4,14 +4,14 @@ const sendEmail = async (options) => {
   const transporter = nodeMailer.createTransport({
     service: process.env.SMPT_SERVICE,
     auth: {
-      user: process.env.SMPT_MAIL,
-      pass: process.env.SMPT_PASSWORD,
+      user: "mobin17102@gmail.com",
+      pass: "",
     },
   });
 
   const mailOptions = {
-    from: process.env.SMPT_MAIL,
-    to: options.email,
+    from: "mobin17102@gmail.com",
+    to: "mokarron.ice.ru@gmail.com",
     subject: options.subject,
     text: options.message,
   };
