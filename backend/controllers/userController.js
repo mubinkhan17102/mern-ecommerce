@@ -128,3 +128,27 @@ exports.resetPassword = handleAsyncError(async (req, res, next)=>{
 
     sentToken(user, 200, res);
 })
+
+exports.updatePassword = handleAsyncError( async (req, res, next)=>{
+    const {oldpassword ,password1, password2} = req.body;
+    if(password1 !== password2){
+        return next(new ErrorHandler('Password not matched', 500));
+    }
+
+    const user = await User.findById(req.user._id);
+    if(!user){
+        next(new ErrorHandler('User not found', 400));
+    }
+
+    const checkPass = user.checkPass(oldpassword);
+
+    if(!checkPass){
+        next(new ErrorHandler('Password not matched', 500))
+    }
+
+    user.password = password1;
+
+    const newUser = await user.save();
+
+    sentToken(user, 200, res);
+})
