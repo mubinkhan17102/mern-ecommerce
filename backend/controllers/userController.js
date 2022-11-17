@@ -150,5 +150,29 @@ exports.updatePassword = handleAsyncError( async (req, res, next)=>{
 
     const newUser = await user.save();
 
-    sentToken(user, 200, res);
+    sentToken(newUser, 200, res);
+})
+
+//Get all user
+exports.getAllUser = handleAsyncError(async (req, res, next)=>{
+    const users = await User.find();
+
+    res.status(200).json({
+        success: true,
+        users
+    })
+})
+
+//Get a single user
+exports.getSingleUser = handleAsyncError(async (req, res, next)=>{
+    const user = await User.findById(req.user._id);
+
+    if(!user){
+        next(new ErrorHandler('User not found', 400));
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    })
 })
