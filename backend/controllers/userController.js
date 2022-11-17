@@ -165,7 +165,7 @@ exports.getAllUser = handleAsyncError(async (req, res, next)=>{
 
 //Get a single user
 exports.getSingleUser = handleAsyncError(async (req, res, next)=>{
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.params.id);
 
     if(!user){
         next(new ErrorHandler('User not found', 400));

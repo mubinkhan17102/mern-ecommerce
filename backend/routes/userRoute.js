@@ -12,7 +12,7 @@ router.route('/password/reset/:token').get(resetPassword)
 router.route('/password/update').put(auth.isAuthinticated, updatePassword)
 router.route('/admin/users')
   .get(auth.isAuthinticated, auth.authorizedUser('admin'), getAllUser)
-router.route('/admin/users/:id')
+router.route('/admin/user/:id')
   .get(auth.isAuthinticated, auth.authorizedUser('admin'), getSingleUser)
 
 module.exports = router;
