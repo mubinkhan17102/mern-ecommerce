@@ -176,3 +176,17 @@ exports.getSingleUser = handleAsyncError(async (req, res, next)=>{
         user
     })
 })
+
+//Delete an user
+exports.deleteUser = handleAsyncError(async (req, res, next)=>{
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if(!user){
+        return next(new ErrorHandler('User not deleted', 203));
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    })
+})

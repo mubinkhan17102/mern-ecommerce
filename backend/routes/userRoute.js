@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, logout, forgotPassword, resetPassword, updatePassword, getAllUser, getSingleUser } = require('../controllers/userController');
+const { registerUser, loginUser, logout, forgotPassword, resetPassword, updatePassword, getAllUser, getSingleUser, deleteUser } = require('../controllers/userController');
 const auth = require('../middleware/auth')
 const router = express.Router();
 
@@ -14,5 +14,6 @@ router.route('/admin/users')
   .get(auth.isAuthinticated, auth.authorizedUser('admin'), getAllUser)
 router.route('/admin/user/:id')
   .get(auth.isAuthinticated, auth.authorizedUser('admin'), getSingleUser)
+  .delete(auth.isAuthinticated, auth.authorizedUser('admin'), deleteUser);
 
 module.exports = router;
