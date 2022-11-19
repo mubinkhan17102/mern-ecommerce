@@ -133,3 +133,18 @@ exports.createProductReview = handleAsyncError(async (req, res, next)=>{
         updatedProduct
     })
 })
+
+//Get all product reviews
+exports.productReviews = handleAsyncError(async (req, res, next)=>{
+    const productId = req.params.id
+    const product = await Product.findById(productId).select('reviews');
+
+    if(!product){
+        return next(new ErrorHandler('Product not found', 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        reviews: product.reviews
+    })
+})
