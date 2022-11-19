@@ -148,3 +148,20 @@ exports.productReviews = handleAsyncError(async (req, res, next)=>{
         reviews: product.reviews
     })
 })
+
+//Delete product review
+exports.deleteReview = handleAsyncError(async (req, res, next)=>{
+    const user = req.user._id;
+    const productId = req.params.id
+
+    const product = await Product.findByIdAndUpdate(productId, {
+        $pull: {
+            'reviews': {user: new mongoose.Types.ObjectId(user)}
+        }
+    })
+
+    res.json({
+        success: true,
+        product
+    })
+})
