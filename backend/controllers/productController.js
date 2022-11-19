@@ -98,7 +98,7 @@ exports.createProductReview = handleAsyncError(async (req, res, next)=>{
     if(!product){
        updatedProduct = await Product.findByIdAndUpdate(productId, {
             $push:{
-                review: ratingInput
+                reviews: ratingInput
             }
        },
        {new : true}
