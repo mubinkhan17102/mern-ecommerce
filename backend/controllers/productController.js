@@ -2,6 +2,7 @@ const Product = require('../models/productModel')
 const ErrorHandler = require('../utils/errorHandler')
 const handleAsyncError = require('../middleware/handleAsyncError');
 const ApiFeatures = require('../utils/apiFeature');
+const { default: mongoose, Mongoose, mongo } = require('mongoose');
 
 //Create product
 exports.createProduct = handleAsyncError(async (req, res, next)=>{
@@ -75,3 +76,56 @@ exports.deleteProduct = handleAsyncError(async (req, res, next)=>{
         message: 'Product deleted successfully'
     })
 });
+
+//Create new review or update the review
+exports.createProductReview = handleAsyncError(async (req, res, next)=>{
+    const {rating, comment, productId} = req.body;
+
+    const ratingInput = {
+        user: req.user._id,
+        name: req.user.name,
+        rating: Number(rating),
+        comment
+    }
+
+    const product = await Product.exists({
+        _id: new mongoose.Types.ObjectId(productId),
+        'reviews.user': new mongoose.Types.ObjectId(ratingInput.user) 
+    })
+
+    let updatedProduct
+
+    if(!product){
+       updatedProduct = await Product.findByIdAndUpdate(productId, {
+            $push:{
+                review: ratingInput
+            }
+       },
+       {new : true}
+       );
+    }else{
+        const udateReviewInput = {};
+        if(rating){
+            udateReviewInput['reviews.$.rating'] = rating;
+        }
+        if(comment){
+            udateReviewInput['reviews.$.comment'] = comment;
+        }
+        updatedProduct = await Product.updateOne({
+            _id: new mongoose.Types.ObjectId(productId),
+            'reviews.user': new mongoose.Types.ObjectId(ratingInput.user)
+        },
+        {
+            $set: udateReviewInput
+        },
+        {
+            new: true
+        }
+        )
+    }
+
+    res.status(200).json({
+        success: true,
+        updatedProduct
+    })
+})
